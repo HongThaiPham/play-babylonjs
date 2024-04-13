@@ -1,9 +1,11 @@
 "use client";
-import ABox from "@/components/ABox";
-import BabylonScene from "@/components/BabylonScene";
-import Hero from "@/components/Hero";
-import Map from "@/components/Map";
+
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+
+const BabylonScene = dynamic(() => import("@/components/BabylonScene"), {
+  ssr: false,
+});
 
 export default function Home() {
   const [isBrowser, setIsBrowser] = useState(false);
@@ -18,10 +20,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-1">
-      <BabylonScene>
-        <Hero />
-        {/* <Map /> */}
-      </BabylonScene>
+      <BabylonScene></BabylonScene>
     </main>
   );
 }

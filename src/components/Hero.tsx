@@ -12,8 +12,8 @@ const Hero = () => {
         width={1}
         height={2.2}
         depth={1}
-        visibility={0.5}
-        position={new Vector3(0, 3, 0)}
+        visibility={0.3}
+        position={new Vector3(0, 1.1, 0)}
       >
         <Model
           rootUrl={"https://models.readyplayer.me/"}

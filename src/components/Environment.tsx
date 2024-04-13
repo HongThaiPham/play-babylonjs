@@ -1,26 +1,8 @@
 "use client";
 
-import { HavokPlugin, Vector3 } from "@babylonjs/core";
-import { useEffect } from "react";
-import { useScene } from "react-babylonjs";
-import HavokPhysics from "@babylonjs/havok";
-type Props = {
-  setIsEnable: (isEnable: boolean) => void;
-};
-const Environment: React.FC<Props> = ({ setIsEnable }) => {
-  const scene = useScene();
+import { Vector3 } from "@babylonjs/core";
 
-  useEffect(() => {
-    // @ts-ignore
-    window.scene = scene;
-    HavokPhysics().then((HK) => {
-      const isEnable = scene?.enablePhysics(
-        new Vector3(0, -9.81, 0),
-        new HavokPlugin(false, HK)
-      );
-      setIsEnable(isEnable ?? false);
-    });
-  }, [scene, setIsEnable]);
+const Environment: React.FC = () => {
   return (
     <>
       <arcRotateCamera
