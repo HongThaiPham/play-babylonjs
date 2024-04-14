@@ -20,6 +20,9 @@ dependencies:
   '@babylonjs/loaders':
     specifier: ^7.2.1
     version: 7.2.1(@babylonjs/core@7.2.1)(babylonjs-gltf2interface@7.2.1)
+  '@babylonjs/materials':
+    specifier: ^7.2.1
+    version: 7.2.1(@babylonjs/core@7.2.1)
   cannon:
     specifier: ^0.6.2
     version: 0.6.2

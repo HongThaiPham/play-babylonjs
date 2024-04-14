@@ -9,6 +9,9 @@ const ShadowBox: React.FC<PropsWithChildren> = ({ children }) => {
       intensity={0.6}
       direction={new Vector3((-5 * Math.PI) / 4, (-5 * Math.PI) / 4, -Math.PI)}
       position={new Vector3(0, 4, 16)}
+      // setDirectionToTarget={[Vector3.Zero()]}
+      shadowMinZ={1}
+      shadowMaxZ={2500}
     >
       <shadowGenerator
         mapSize={1024}

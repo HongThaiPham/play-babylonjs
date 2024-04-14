@@ -1,17 +1,27 @@
 "use client";
 import { Scene, Engine, SceneEventArgs } from "react-babylonjs";
 import "@babylonjs/core/Physics/physicsEngineComponent"; // side-effect adds scene.enablePhysics function
-import { PropsWithChildren, useEffect, useState } from "react";
-import { HavokPlugin, PhysicsShapeType, Vector3 } from "@babylonjs/core";
+import { PropsWithChildren, useEffect, useRef, useState } from "react";
+import {
+  Color3,
+  GroundMesh,
+  HavokPlugin,
+  PhysicsShapeType,
+  Vector3,
+} from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
 import ShadowBox from "./ShadowBox";
 import PhysicProvider from "./PhysicProvider";
 import Map from "./Map";
 import Hero from "./Hero";
 import HavokPhysics from "@babylonjs/havok";
+
+import { GridMaterial } from "@babylonjs/materials";
+
 const BabylonScene: React.FC<PropsWithChildren> = ({ children }) => {
   const [isClient, setIsClient] = useState(false);
   const [physicEnabled, setPhysicEnabled] = useState(false);
+  const groundRef = useRef<GroundMesh>(null);
   useEffect(() => {
     if (typeof window !== "undefined") {
       require("@babylonjs/core/Debug/debugLayer");
@@ -21,6 +31,24 @@ const BabylonScene: React.FC<PropsWithChildren> = ({ children }) => {
       setIsClient(true);
     }
   }, []);
+
+  function setupGroundGrid() {
+    if (!groundRef.current) return;
+
+    console.log("adjusting ground material");
+    const groundMaterial = new GridMaterial(
+      "groundMaterial",
+      groundRef.current._scene
+    );
+    groundMaterial.minorUnitVisibility = 0.45;
+    groundMaterial.majorUnitFrequency = 10;
+    groundMaterial.gridRatio = 2;
+    groundMaterial.backFaceCulling = false;
+    groundMaterial.mainColor = new Color3(1, 1, 1);
+    groundMaterial.lineColor = new Color3(1.0, 1.0, 1.0);
+    groundMaterial.opacity = 0.1;
+    groundRef.current.material = groundMaterial;
+  }
 
   const handleScreenMount = async (sceneEventArgs: SceneEventArgs) => {
     console.log("onSceneMount: ", sceneEventArgs);
@@ -34,6 +62,7 @@ const BabylonScene: React.FC<PropsWithChildren> = ({ children }) => {
       );
       setPhysicEnabled(_res ?? false);
       scene.debugLayer.show();
+      setTimeout(setupGroundGrid, 500);
     }
   };
 
@@ -55,21 +84,22 @@ const BabylonScene: React.FC<PropsWithChildren> = ({ children }) => {
       <Scene collisionsEnabled={true} onSceneMount={handleScreenMount}>
         {physicEnabled ? (
           <PhysicProvider>
-            {/* <ground
-            name="ground"
-            width={20}
-            height={15}
-            receiveShadows
-            checkCollisions
-            subdivisions={0}
-            position={new Vector3(0, -1, 0)}
-          >
-            <physicsAggregate
-              type={PhysicsShapeType.BOX}
-              _options={{ mass: 0, restitution: 0.1 }}
-            />
-          </ground> */}
-            <Map />
+            <ground
+              name="ground"
+              ref={groundRef}
+              width={20}
+              height={15}
+              receiveShadows
+              checkCollisions
+              subdivisions={2}
+              position={new Vector3(0, -1, 0)}
+            >
+              <physicsAggregate
+                type={PhysicsShapeType.BOX}
+                _options={{ mass: 0, restitution: 0.1 }}
+              />
+            </ground>
+            {/* <Map /> */}
             <ShadowBox>
               <Hero />
             </ShadowBox>

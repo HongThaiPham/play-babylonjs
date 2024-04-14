@@ -1,8 +1,10 @@
 "use client";
 
 import { Vector3 } from "@babylonjs/core";
+import { useState } from "react";
 
 const Environment: React.FC = () => {
+  const [fps, setFps] = useState<string>("60 fps");
   return (
     <>
       <arcRotateCamera
@@ -23,6 +25,18 @@ const Environment: React.FC = () => {
         intensity={0.7}
         direction={Vector3.Up()}
       />
+      <adtFullscreenUi name="UI">
+        <textBlock
+          key="fpsCounter"
+          text={fps}
+          width={30}
+          height={30}
+          color={"orange"}
+          fontSize={18}
+          top={"-48%"}
+          left={"48.5%"}
+        />
+      </adtFullscreenUi>
     </>
   );
 };
