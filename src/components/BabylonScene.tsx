@@ -21,6 +21,7 @@ import { GridMaterial } from "@babylonjs/materials";
 const BabylonScene: React.FC<PropsWithChildren> = ({ children }) => {
   const [isClient, setIsClient] = useState(false);
   const [physicEnabled, setPhysicEnabled] = useState(false);
+  const [groundReady, setGroundReady] = useState(false);
   const groundRef = useRef<GroundMesh>(null);
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -54,16 +55,24 @@ const BabylonScene: React.FC<PropsWithChildren> = ({ children }) => {
     console.log("onSceneMount: ", sceneEventArgs);
     const { scene } = sceneEventArgs;
     const engine = scene.getEngine();
+
     if (scene && engine) {
+      window.scene = scene;
       // scene.enablePhysics(new Vector3(0, -9.81, 0), new CannonJSPlugin());
       const _res = scene.enablePhysics(
         new Vector3(0, -9.81, 0),
         new HavokPlugin(false, await HavokPhysics())
       );
       setPhysicEnabled(_res ?? false);
-      scene.debugLayer.show();
+      // scene.debugLayer.show();
       setTimeout(setupGroundGrid, 500);
     }
+  };
+  const handleGroundCreated = () => {
+    console.log("handleGroundCreated");
+    setTimeout(() => {
+      setGroundReady(true);
+    }, 1000);
   };
 
   if (!isClient) {
@@ -84,7 +93,7 @@ const BabylonScene: React.FC<PropsWithChildren> = ({ children }) => {
       <Scene collisionsEnabled={true} onSceneMount={handleScreenMount}>
         {physicEnabled ? (
           <PhysicProvider>
-            <ground
+            {/* <ground
               name="ground"
               ref={groundRef}
               width={20}
@@ -92,17 +101,21 @@ const BabylonScene: React.FC<PropsWithChildren> = ({ children }) => {
               receiveShadows
               checkCollisions
               subdivisions={2}
-              position={new Vector3(0, -1, 0)}
+              position={new Vector3(0, -0.1, 0)}
+              isPickable={false}
+              onCreated={handleGroundCreated}
             >
               <physicsAggregate
                 type={PhysicsShapeType.BOX}
                 _options={{ mass: 0, restitution: 0.1 }}
               />
-            </ground>
-            {/* <Map /> */}
+            </ground> */}
+            <Map />
+            {/* {groundReady ? ( */}
             <ShadowBox>
               <Hero />
             </ShadowBox>
+            ){/* : null} */}
           </PhysicProvider>
         ) : null}
       </Scene>

@@ -20,7 +20,7 @@ const Map = () => {
           rootUrl={"/assets/"}
           sceneFilename={"startupweekend.glb"}
           name={"startupweekend"}
-          position={new Vector3(0, 0.5, 0)}
+          position={new Vector3(0, 0, 0)}
           // scaling={new Vector3(1, 1, 1)}
           receiveShadows
           checkCollisions
